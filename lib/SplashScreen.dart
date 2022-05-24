@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:agri_tech/BottomNavigation.dart';
-import 'package:agri_tech/ListFarms.dart';
+import 'package:agri_tech/Login.dart';
+
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:flutter/cupertino.dart';
-import 'Dashbord.dart';
-import 'Login.dart';
+
+
 class SplashScreen extends StatefulWidget{
 
   @override
@@ -15,15 +15,14 @@ class SplashScreen extends StatefulWidget{
 }
 
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _animation;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     Timer(const Duration(seconds: 5), () {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => BottomNavigation() ));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Login() ));
+    //Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavigation() ));
     });
   }
     @override

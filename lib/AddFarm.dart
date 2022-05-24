@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Models/Farm.dart';
 
@@ -26,22 +27,30 @@ class _AddFarmState extends State<AddFarm> with SingleTickerProviderStateMixin {
     txtLieuFerme=new TextEditingController();
   }
 
-  void addFarm() async{
-    final uri=Uri.parse("http://192.168.43.130:8080/addFarm");
-    var req = await http.post(uri,body: {
+ Future<Farm> addFarm() async{
+    SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+    var idUser=sharedPreferences.getString("idUser");
+
+   final uri=Uri.parse("http://192.168.43.130:8080/addFerme/$idUser");
+    var req = await http.post(uri,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({
       "nom":txtNomFerme.text,
       "lieu":txtLieuFerme.text,
-    });
-    var response=json.decode(req.body) ;
+    }));
 
-      Farm farm = Farm(response["id"], response["nom"], response["lieu"]);
 
-    if(farm !=null ){
-
+    if (req.statusCode == 200) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
       Fluttertoast.showToast(msg: "succesful",toastLength: Toast.LENGTH_SHORT);
       Navigator.push(context,MaterialPageRoute(builder: (context)=> ListFarms()));
+      return Farm.fromJson(jsonDecode(req.body));
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      throw Exception('Failed to create album.');
     }
-    else {   Fluttertoast.showToast(msg: "error",toastLength: Toast.LENGTH_SHORT);}
 
 
 

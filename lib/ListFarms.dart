@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:agri_tech/ListParcels.dart';
 import 'package:agri_tech/Models/Farm.dart';
+import 'package:agri_tech/Services/FarmService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'AddFarm.dart';
 
@@ -18,32 +20,25 @@ class ListFarms extends StatefulWidget{
 }
 
 class _ListFarmsState extends State<ListFarms> with SingleTickerProviderStateMixin {
-  Future<List<Farm>> GetAllUsers() async {
-    final uri = Uri.parse("http://192.168.43.130:8080/getAllFerme");
-    var data = await http.get(uri);
-    var jsonData = json.decode(data.body);
-    List<Farm> farms = [];
-    for (var f in jsonData) {
-      Farm farm = Farm(f["id"], f["nom"], f["lieu"]);
-      farms.add(farm);
-    }
+List<Farm>? farms;
+
+    Future<List<Farm>?>GetFarmsByUserId() async {
+      SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+      var idUser=sharedPreferences.getString("idUser");
+
+      farms=await FarmService().GetFarmsByUserId(idUser!);
     setState(() {
 
     });
-    return farms;
+  return farms;
   }
 
-  void deleteFarm(String id) async {
-    final uri = Uri.parse("http://192.168.43.130:8080/deleteFerme/$id");
-    final http.Response response = await http.delete(
-    uri,
-    );
 
-  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    print( GetFarmsByUserId());
 
   }
   @override
@@ -53,12 +48,14 @@ class _ListFarmsState extends State<ListFarms> with SingleTickerProviderStateMix
       backgroundColor: Colors.grey[200],
         appBar: AppBar(
         title: Text("Liste Fermes"),
+        automaticallyImplyLeading: false,
+        backgroundColor: Color(0xFF22780F),
       ),
 
       body: Container(
       margin: const EdgeInsets.only(top: 10.0),
            child:FutureBuilder(
-              future:GetAllUsers() ,
+              future:GetFarmsByUserId() ,
               builder: (BuildContext context,AsyncSnapshot snapshot) {
              if (snapshot.data == null) {
                return Container(
@@ -120,7 +117,7 @@ class _ListFarmsState extends State<ListFarms> with SingleTickerProviderStateMix
                     margin: EdgeInsets.all(5.0),
                   child: IconSlideAction(
                     caption: "Delete",
-                    color: Colors.red,
+                    color:  Color(0xFFFB4C0D),
                     icon: Icons.delete,
 
                     onTap: (){
@@ -131,7 +128,7 @@ class _ListFarmsState extends State<ListFarms> with SingleTickerProviderStateMix
                           ElevatedButton(onPressed:(){Navigator.of(ctx).pop(false);}, child:Text("Cancel")),
                           ElevatedButton(onPressed:(){
                             Navigator.of(ctx).pop(true);
-                            deleteFarm(snapshot.data[index].id.toString());
+                            FarmService().deleteFarm(snapshot.data[index].id.toString());
                           }, child:Text("Delete"))
                         ],
                       )
@@ -142,7 +139,7 @@ class _ListFarmsState extends State<ListFarms> with SingleTickerProviderStateMix
                 margin: EdgeInsets.all(5.0),
                 child:IconSlideAction(
                       caption: "Edit",
-                      color: Colors.blue,
+                      color:  Color(0xFF22780F),
                       icon: Icons.edit,
                       onTap: (){}),)
                 ],
@@ -169,4 +166,5 @@ class _ListFarmsState extends State<ListFarms> with SingleTickerProviderStateMix
 
 
   }
+
 }

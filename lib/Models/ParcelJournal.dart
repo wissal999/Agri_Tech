@@ -1,17 +1,27 @@
 class ParcelJournal{
-  final int id;
-  final String nom;
-  final double surface;
-  final int totaleImplantation;
-  final bool etatArrosage;
-  final bool typeArrosage;
+  int id;
+  String nom;
+  double surface;
+  int totaleImplantation;
+  bool etatArrosage;
+  bool typeArrosage;
+  double temperatureIdeale;
+  double humiditeIdeale;
+  double humidite_solIdeale;
 
-  final String date;
-  final double temperature;
-  final double humidite;
-  final double humidite_sol;
+  int idCulture;
+  String nomCulture;
 
-  ParcelJournal(this.id, this.nom, this.surface, this.totaleImplantation, this.etatArrosage, this.typeArrosage, this.date, this.temperature, this.humidite, this.humidite_sol);
+  double temperature;
+  double humidite;
+  double humidite_sol;
+
+  ParcelJournal( this.id,this.nom,this.surface,this.totaleImplantation,this.etatArrosage,this.typeArrosage,this.temperatureIdeale,this.humiditeIdeale, this.humidite_solIdeale, this.idCulture, this.nomCulture,this.temperature, this.humidite, this.humidite_sol);
+
+
+
+
+
 
 
 

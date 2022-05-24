@@ -1,5 +1,6 @@
 import 'package:agri_tech/Dashbord.dart';
 import 'package:agri_tech/ListFarms.dart';
+import 'package:agri_tech/SettingsPage.dart';
 import 'package:flutter/material.dart';
 
 
@@ -15,7 +16,7 @@ class _BottomNavigationState extends State<BottomNavigation> with SingleTickerPr
   List<Widget> widgetsOptions=<Widget>[
     Dashbord(),
     ListFarms(),
-    Text("profile")
+    SettingsPage()
 
 ];
   void onItemTap(int index){
